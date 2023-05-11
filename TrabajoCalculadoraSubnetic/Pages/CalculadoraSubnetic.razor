@@ -1,0 +1,115 @@
+﻿@page "/CalculadoraSubnetic"
+@using TrabajoCalculadoraSubnetic.Logica;
+@using TrabajoCalculadoraSubnetic.Logica
+
+<html>
+  <head>
+    <link rel="stylesheet" href="~/css/app.css">
+    <title>Calculadora Subnetic</title>
+  </head>
+  <body>
+    <h3>Calculadora Subnetic</h3>
+
+    <table>
+        <tbody>
+            <tr>
+                <td>Major Network</td>
+                <td colspan="2"><input id="x2" type="text" @bind="@MajorNetwork"></td>
+            </tr>
+            <tr>
+                <td class="center"rowspan="6">Subnets</td>
+                <td class="nob center">Name</td>
+                <td class="nob center">Size</td>
+            </tr>
+            <tr>
+
+                <td class="nob"><input type="text" @bind="@SubnetAName"></td>
+                <td class="nob"><input type="text" @bind="@SubnetASize"></td>
+            </tr>
+            <tr>
+
+                <td class="nob"><input type="text" @bind="@SubnetBName"></td>
+                <td class="nob"><input type="text" @bind="@SubnetBSize"></td>
+            </tr>
+            <tr>
+
+                <td class="nob"><input type="text" @bind="@SubnetCName"></td>
+                <td class="nob"><input type="text" @bind="@SubnetCSize"></td>
+            </tr>
+            <tr>
+
+                <td class="nob right">Numbers of subnets:</td>
+                <td class="nob">
+                    <input id="x" type="text" @bind="@NumSubnets" />
+                    <button type="button" @onclick="() => ChangeNumSubnets()">Change</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="nob right">Sort result by</td>
+                <td class="nob">
+                    <select id="select" @bind="@SortBy">
+                        <option value="name">Name</option>
+                        <option value="size" selected>Size</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><button id="boton" type="button" @onclick="CalculateSubnets">Submit</button></td>
+            </tr>
+        </tbody>
+    </table>
+  </body>
+</html>
+
+@if (Subnets != null)
+    {
+        <div>
+            <h4>Result:</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Subnet Mask</th>
+                        <th>Address Range</th>
+                        <th>Broadcast Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var subnet in Subnets)
+                    {
+                        <tr>
+                            <td>@subnet.Name</td>
+                            <td>@subnet.Size</td>
+                            <td>@subnet.SubnetMask</td>
+                            <td>@subnet.AddressRange</td>
+                            <td>@subnet.BroadcastAddress</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @code {
+    private string MajorNetwork;
+    private string SubnetAName;
+    private int SubnetASize;
+    private string SubnetBName;
+    private int SubnetBSize;
+    private string SubnetCName;
+    private int SubnetCSize;
+    private int NumSubnets = 1;
+    private string SortBy = "name";
+    private List<Subnet> Subnets;
+
+    private void CalculateSubnets()
+    {
+        // De momento nada
+    }
+
+    private void ChangeNumSubnets()
+    {
+        // De momento nada xd
+    }
+}
