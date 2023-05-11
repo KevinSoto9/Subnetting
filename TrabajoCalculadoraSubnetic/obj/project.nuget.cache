@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mYeqrlGyZ9lJhXRYkhp7lZ1ht4CX+3GYL0+m2qXoTe5E5nNmT1PuLBYtaGlgJpYiWJiyJDUwfCd3Zpg1fG5YOg==",
+  "dgSpecHash": "LvDpfmnOEhxcu8x8asPFecKzKR+LhTD6WSzfyWXLKicTdQvM/d2UcPAOpIm6Mz2UgNYEAGV0oayZ25QmPfdliw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic.csproj",
+  "projectFilePath": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoSubnetic\\Subnetic\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Kevin\\.nuget\\packages\\microsoft.aspnetcore.authorization\\6.0.14\\microsoft.aspnetcore.authorization.6.0.14.nupkg.sha512",
     "C:\\Users\\Kevin\\.nuget\\packages\\microsoft.aspnetcore.components\\6.0.14\\microsoft.aspnetcore.components.6.0.14.nupkg.sha512",

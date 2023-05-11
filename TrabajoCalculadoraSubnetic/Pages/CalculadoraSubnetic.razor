@@ -41,16 +41,6 @@
                 <td class="nob right">Numbers of subnets:</td>
                 <td class="nob">
                     <input id="x" type="text" @bind="@NumSubnets" />
-                    <button type="button" @onclick="() => ChangeNumSubnets()">Change</button>
-                </td>
-            </tr>
-            <tr>
-                <td class="nob right">Sort result by</td>
-                <td class="nob">
-                    <select id="select" @bind="@SortBy">
-                        <option value="name">Name</option>
-                        <option value="size" selected>Size</option>
-                    </select>
                 </td>
             </tr>
             <tr>
@@ -100,7 +90,6 @@
     private string SubnetCName;
     private int SubnetCSize;
     private int NumSubnets = 1;
-    private string SortBy = "name";
     private List<Subnet> Subnets;
 
     private void CalculateSubnets()
@@ -108,8 +97,5 @@
         // De momento nada
     }
 
-    private void ChangeNumSubnets()
-    {
-        // De momento nada xd
-    }
+   
 }

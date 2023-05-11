@@ -1768,11 +1768,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic.csproj",
+      "projectUniqueName": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoSubnetic\\Subnetic\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic.csproj",
       "projectName": "TrabajoCalculadoraSubnetic",
-      "projectPath": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic.csproj",
+      "projectPath": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoSubnetic\\Subnetic\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic.csproj",
       "packagesPath": "C:\\Users\\Kevin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoCalculadoraSubnetic\\TrabajoCalculadoraSubnetic\\obj\\",
+      "outputPath": "C:\\Users\\Kevin\\source\\repos\\Tema6\\TrabajoSubnetic\\Subnetic\\TrabajoCalculadoraSubnetic\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
