@@ -1,6 +1,6 @@
 ﻿@page "/CalculadoraSubnetic"
+@using System.Linq;
 @using TrabajoCalculadoraSubnetic.Logica;
-@using TrabajoCalculadoraSubnetic.Logica
 
 <html>
   <head>
@@ -21,30 +21,23 @@
                 <td colspan="2"><input id="x2" type="text" @bind="@MajorNetwork"></td>
             </tr>
             <tr>
-                <td class="center"rowspan="6">Subnets</td>
+                <td class="center"rowspan="@SubnetTitle">Subnets</td>
                 <td class="nob center">Name</td>
                 <td class="nob center">Size</td>
             </tr>
-            <tr>
-
-                <td class="nob"><input type="text" @bind="@SubnetAName"></td>
-                <td class="nob"><input type="text" @bind="@SubnetASize"></td>
-            </tr>
-            <tr>
-
-                <td class="nob"><input type="text" @bind="@SubnetBName"></td>
-                <td class="nob"><input type="text" @bind="@SubnetBSize"></td>
-            </tr>
-            <tr>
-
-                <td class="nob"><input type="text" @bind="@SubnetCName"></td>
-                <td class="nob"><input type="text" @bind="@SubnetCSize"></td>
-            </tr>
+                @for (int i = 0; i < NumSubnets; i++)
+                {
+                <tr>
+                    <td class="nob"><input type="text" ></td>
+                    <td class="nob"><input type="text" ></td>
+                </tr>
+                }
             <tr>
 
                 <td class="nob right">Numbers of subnets:</td>
                 <td class="nob">
-                    <input id="x" type="text" @bind="@NumSubnets" />
+                    <input id="x" type="text" @bind="NumSubnets"/>
+                    <button type="button" @onclick="ChangeNumbers">Change</button>
                 </td>
             </tr>
             <tr>
@@ -55,7 +48,7 @@
   </body>
 </html>
 
-@if (Subnets != null)
+@*@if (Subnets != null)
     {
         <div>
             <h4>Result:</h4>
@@ -83,9 +76,10 @@
                 </tbody>
             </table>
         </div>
-    }
+    }*@
 
-    @code {
+@code {
+    private string nombre;
     private string IPAdress;
     private string MajorNetwork;
     private string SubnetAName;
@@ -94,13 +88,36 @@
     private int SubnetBSize;
     private string SubnetCName;
     private int SubnetCSize;
-    private int NumSubnets = 1;
+    private int _numSubnets = 3;
+    public int NumSubnets
+    {
+        get => _numSubnets;
+        set
+        {
+            _numSubnets = value;
+            SubnetTitle = 2 + _numSubnets;
+            Subnets = Enumerable.Range(0, _numSubnets).Select(_ => new Subnet()).ToList();
+        }
+    }
+
+    private int SubnetTitle = 5;
     private List<Subnet> Subnets;
+
+
+    private void ChangeNumbers()
+    {
+        SubnetTitle = NumSubnets + 2;
+
+        Subnets = new List<Subnet>();
+
+        for (int i = 0; i < NumSubnets; i++)
+        {
+            Subnets.Add(new Subnet());
+        }
+    }
 
     private void CalculateSubnets()
     {
         // De momento nada
     }
-
-   
 }
