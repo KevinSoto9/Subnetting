@@ -861,11 +861,11 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-Hs7J\/gRloGo1KYsA3oWbR6VF3Q3Ta3X1Bi9g\/7V2moQ=",
+      "hash": "sha256-xQU3z+FXquSyAlQJbQq\/xrBgymLCSM9l+QmobFs\/glg=",
       "url": "_framework\/TrabajoCalculadoraSubnetic.dll"
     },
     {
-      "hash": "sha256-M0xufxCxBdNKAUwgAcGL9LtJe75ZOu3A9KwIrDU0V5g=",
+      "hash": "sha256-JQi5CQhmZGjsJQLvV7JZw11MFYfq4M+XVgEe29zoJac=",
       "url": "_framework\/TrabajoCalculadoraSubnetic.pdb"
     },
     {
@@ -873,9 +873,9 @@
       "url": "_framework\/blazor.webassembly.js"
     },
     {
-      "hash": "sha256-2QQVHBNYQR1PBDuvOQaQwUHslU5+3L57oyU1SZog3lQ=",
+      "hash": "sha256-9f+nHTLJLw5mX6IQqFzpRDgegAs0TAkLnJIv6iKIAug=",
       "url": "_framework\/blazor.boot.json"
     }
   ],
-  "version": "FgfneLdr"
+  "version": "1yN1KgF7"
 };

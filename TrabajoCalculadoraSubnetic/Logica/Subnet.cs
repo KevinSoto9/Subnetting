@@ -7,5 +7,7 @@
         public string SubnetMask { get; set; }
         public string AddressRange { get; set; }
         public string BroadcastAddress { get; set; }
+
+
     }
 }
