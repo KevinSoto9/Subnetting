@@ -28,8 +28,8 @@
                 @for (int i = 0; i < NumSubnets; i++)
                 {
                 <tr>
-                    <td class="nob"><input type="text" ></td>
-                    <td class="nob"><input type="text" ></td>
+                    <td class="nob"><input type="text" @bind="Subnets[i].Name"></td>
+                    <td class="nob"><input type="text" @bind="Subnets[i].Size"></td>
                 </tr>
                 }
             <tr>
@@ -95,6 +95,11 @@
 
     private int SubnetTitle = 5;
     private List<Subnet> Subnets;
+
+    protected override void OnInitialized()
+    {
+        Subnets = Enumerable.Range(0, _numSubnets).Select(_ => new Subnet()).ToList();
+    }
 
 
     private void ChangeNumbers()
