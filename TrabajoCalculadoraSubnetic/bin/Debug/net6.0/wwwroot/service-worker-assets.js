@@ -1,7 +1,7 @@
 ﻿self.assetsManifest = {
   "assets": [
     {
-      "hash": "sha256-IKfYICH8KgMf1tendiuhN47MHeVFVlVFuR2+\/9u3bck=",
+      "hash": "sha256-Vs18j3\/T6kMPf8eXtbsctSskINiA8u16L8gvjuEzF6U=",
       "url": "css\/app.css"
     },
     {
@@ -861,11 +861,11 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-VDunw1r5sdWoEMjB++IEpT+eunfRmz5hLO746Uz3ljE=",
+      "hash": "sha256-cLqmNds+XVIHgwF2xprHmXI76+6QxIYkjg0kyONIGAk=",
       "url": "_framework\/TrabajoCalculadoraSubnetic.dll"
     },
     {
-      "hash": "sha256-E\/sRLtroteHzqQHMx03w0suvfXiWHZIq0E7ogrsB7mE=",
+      "hash": "sha256-pXCT3dffoEQajeQFo5sMHYozfHhLGy8J2s\/8F1\/nhkg=",
       "url": "_framework\/TrabajoCalculadoraSubnetic.pdb"
     },
     {
@@ -873,9 +873,9 @@
       "url": "_framework\/blazor.webassembly.js"
     },
     {
-      "hash": "sha256-i9yfIcfWccJQKTgmpkzmgrRNQsMWp6d8CdV37kzYlbE=",
+      "hash": "sha256-522TXK+Vj397MHA0XXpJ882ViplE7miBc4M4cuAvg04=",
       "url": "_framework\/blazor.boot.json"
     }
   ],
-  "version": "aOGj5mGJ"
+  "version": "ss+Wu1ZG"
 };

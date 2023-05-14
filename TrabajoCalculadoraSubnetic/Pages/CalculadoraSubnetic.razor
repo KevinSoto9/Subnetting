@@ -1,6 +1,10 @@
 ﻿@page "/"
+@using System;
 @using System.Linq;
 @using TrabajoCalculadoraSubnetic.Logica;
+@using System.Globalization;
+@using System.Text.RegularExpressions;
+@using System.Net;
 
 <html>
   <head>
@@ -9,87 +13,109 @@
   </head>
   <body>
     <h3>Calculadora Subnetic</h3>
-
-    <table>
-        <tbody>
-            <tr>
-                <td>IP Adress</td>
-                <td colspan="2"><input id="x2" type="text" @bind="@IPAdress"></td>
-            </tr>
-            <tr>
-                <td>Major Network</td>
-                <td colspan="2"><input id="x2" type="text" @bind="@MajorNetwork"></td>
-            </tr>
-            <tr>
-                <td class="center"rowspan="@SubnetTitle">Subnets</td>
-                <td class="nob center">Name</td>
-                <td class="nob center">Size</td>
-            </tr>
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="ipAddress">IP Address:</label></td>
+                    <td colspan="2">
+                        <input id="ipAddress" style="width: 405px" type="text" @bind-value="@IPAddress" />
+                    @if (!string.IsNullOrEmpty(IPAddress) && !IsValidIpAddress(IPAddress))
+                    {
+                        <p class="error">Invalid IP Address format</p>
+                    }
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="subnetMask">Subnet Mask (CIDR)</label></td>
+                    <td colspan="2">
+                        <input id="subnetMask" style="width: 405px"  type="text" @bind-value="@SubnetMask" />
+                    @if (!string.IsNullOrEmpty(SubnetMask) && !IsValidSubnetMask(SubnetMask))
+                    {
+                        <p class="error">Invalid Subnet Mask (CIDR) format</p>
+                    }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Major Network:</td>
+                    <td colspan="2"><input id="majorNetwork" style="width: 405px"  type="text" @bind-value="@MajorNetwork"></td>
+                </tr>
+                <tr>
+                    <td class="center" rowspan="@SubnetTitle">Subnets:</td>
+                    <td class="nob center">Name:</td>
+                    <td class="nob center">Size:</td>
+                </tr>
                 @for (int i = 0; i < NumSubnets; i++)
                 {
-                <tr>
-                    <td class="nob"><input type="text" @bind="Subnets[i].Name"></td>
-                    <td class="nob"><input type="text" @bind="Subnets[i].Size"></td>
-                </tr>
+                    <tr>
+                        <td class="nob"><input type="text" @bind="@Subnets[i].Name"></td>
+                        <td class="nob"><input type="text" @bind="@Subnets[i].Size"></td>
+                    </tr>
                 }
-            <tr>
+                <tr>
+                    <td class="nob right">Number of subnets:</td>
+                    <td class="nob">
+                        <input id="numSubnets" style="width: 100px" type="text" @bind-value="@NumSubnets" />
+                        <button type="button" @onclick="ChangeNumbers">Change</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"><button id="boton" type="button" @onclick="CalculateSubnets">Submit</button></td>
+                </tr>
+            </tbody>
+        </table>
 
-                <td class="nob right">Numbers of subnets:</td>
-                <td class="nob">
-                    <input id="x" type="text" @bind="NumSubnets"/>
-                    <button type="button" @onclick="ChangeNumbers">Change</button>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3"><button id="boton" type="button" @onclick="CalculateSubnets">Submit</button></td>
-            </tr>
-        </tbody>
-    </table>
+        @*@if (Subnets != null)
+        {
+            <div>
+                <h4>Result:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Subnet Mask</th>
+                            <th>Address Range</th>
+                            <th>Broadcast Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var subnet in Subnets)
+                        {
+                            <tr>
+                                <td>@subnet.Name</td>
+                                <td>@subnet.Size</td>
+                                <td>@subnet.SubnetMask</td>
+                                <td>@subnet.AddressRange</td>
+                                <td>@subnet.BroadcastAddress</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }*@
   </body>
 </html>
 
-@*@if (Subnets != null)
-    {
-        <div>
-            <h4>Result:</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Size</th>
-                        <th>Subnet Mask</th>
-                        <th>Address Range</th>
-                        <th>Broadcast Address</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var subnet in Subnets)
-                    {
-                        <tr>
-                            <td>@subnet.Name</td>
-                            <td>@subnet.Size</td>
-                            <td>@subnet.SubnetMask</td>
-                            <td>@subnet.AddressRange</td>
-                            <td>@subnet.BroadcastAddress</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }*@
-
 @code {
-    private string IPAdress;
+    private string IPAddress;
+    private string SubnetMask;
     private string MajorNetwork;
+    private string _ipAddress;
+    private string _subnetMask;
+    private string _majorNetwork;
     private int _numSubnets = 3;
+
     public int NumSubnets
     {
         get => _numSubnets;
         set
         {
-            _numSubnets = value;
-            SubnetTitle = 2 + _numSubnets;
-            Subnets = Enumerable.Range(0, _numSubnets).Select(_ => new Subnet()).ToList();
+            if (value >= 0)
+            {
+                _numSubnets = value;
+                SubnetTitle = 2 + _numSubnets;
+                Subnets = Enumerable.Range(0, _numSubnets).Select(_ => new Subnet()).ToList();
+            }
         }
     }
 
@@ -100,7 +126,6 @@
     {
         Subnets = Enumerable.Range(0, _numSubnets).Select(_ => new Subnet()).ToList();
     }
-
 
     private void ChangeNumbers()
     {
@@ -116,6 +141,84 @@
 
     private void CalculateSubnets()
     {
-        // De momento nada
+        if (!IsValidIpAddress(IPAddress))
+        {
+            return;
+        }
+
+        if (!IsValidSubnetMask(SubnetMask))
+        {
+
+            return;
+        }
+
+
+
+        var ipAddress = IPAddress;
+        var subnetMask = SubnetMask;
+        var network = MajorNetwork;
+        var numsubnets = NumSubnets;
+    }
+
+    private bool IsValidIpAddress(string ipAddress)
+    {
+        string pattern = @"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$";
+        if (!Regex.IsMatch(ipAddress, pattern))
+        {
+            return false; 
+        }
+
+        string[] octets = ipAddress.Split('.');
+        foreach (string octet in octets)
+        {
+            int value = int.Parse(octet);
+            if (value < 0 || value > 255)
+            {
+                return false; 
+            }
+        }
+
+        return true;
+    }
+
+    private bool IsValidSubnetMask(string subnetMask)
+    {
+        string pattern = @"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$";
+        if (!Regex.IsMatch(subnetMask, pattern))
+        {
+            return false; 
+        }
+
+        string[] octets = subnetMask.Split('.');
+        int[] values = new int[4];
+        for (int i = 0; i < 4; i++)
+        {
+            values[i] = int.Parse(octets[i]);
+        }
+
+        int firstZero = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (values[i] == 0)
+            {
+                firstZero = i;
+                break;
+            }
+        }
+
+        if (firstZero == -1)
+        {
+            return false; 
+        }
+
+        for (int i = firstZero + 1; i < 4; i++)
+        {
+            if (values[i] != 0)
+            {
+                return false; 
+            }
+        }
+
+        return true;
     }
 }
