@@ -17,6 +17,7 @@
   <ItemGroup>
     <Content Remove="Pages\FetchData.razor" />
     <Content Remove="Pages\Index.razor" />
+    <Content Remove="Pages\X.razor" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,33 @@
+﻿
+
+<InputNumber @bind-Value="subnetsCount"/>
+<button @onclick="Update">Click Me</button>
+
+@foreach (Subnet subnet in subnets)
+{
+	<InputText @bind-Value="subnet.Name"/>
+}
+
+@code {
+	private int subnetsCount;
+	private List<Subnet> subnets = new List<Subnet>();
+
+	
+
+	private void Update()
+	{
+
+		for(int i = subnets.Count; i < subnets.Count; i++)
+		{
+			subnets.Add(new Subnet { Name = ((char)('A' + i)).ToString() });
+		}
+	}
+
+	class Subnet
+	{
+		public string Name { get; set; }
+		public int Host { get; set; }
+	}
+	
+
+}
