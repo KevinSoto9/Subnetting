@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using System;
 @using System.Linq;
-@using TrabajoCalculadoraSubnetic.Logica;
 @using System.Globalization;
 @using System.Text.RegularExpressions;
 @using System.Net;
@@ -9,10 +8,10 @@
 <html>
   <head>
     <link rel="stylesheet" href="~/css/app.css">
-    <title>Calculadora Subnetting</title>
+    <title>Calculadora Subnetting (FLSM)</title>
   </head>
   <body>
-    <h3>Calculadora Subnetting</h3>
+    <h3>Calculadora Subnetting (FLSM)</h3>
         <table>
             <tbody>
                 <tr>
@@ -36,26 +35,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Major Network:</td>
-                    <td colspan="2"><input id="majorNetwork" style="width: 405px"  type="text" @bind-value="@MajorNetwork"></td>
+                    <td><label for="numberOfHosts">Numbers of Hosts</label></td>
+                    <td colspan="2">
+                        <input id="numberOfHosts" style="width: 405px"  type="text" @bind-value="@NumberOfHosts" />
+                    </td>
                 </tr>
                 <tr>
-                    <td class="center" rowspan="@SubnetTitle">Subnets:</td>
-                    <td class="nob center">Name:</td>
-                    <td class="nob center">Size:</td>
-                </tr>
-                @for (int i = 0; i < NumSubnets; i++)
-                {
-                    <tr>
-                        <td class="nob"><input type="text" @bind="@Subnets[i].Name"></td>
-                        <td class="nob"><input type="text" @bind="@Subnets[i].Size"></td>
-                    </tr>
-                }
-                <tr>
-                    <td class="nob right">Number of subnets:</td>
-                    <td class="nob">
-                        <input id="numSubnets" style="width: 100px" type="text" @bind-value="@NumSubnets" />
-                        <button type="button" @onclick="ChangeNumbers">Change</button>
+                    <td><label for="numSubnets">Numbers of Subnets</label></td>
+                    <td colspan="2">
+                        <input id="numSubnets" style="width: 405px"  type="text" @bind-value="@NumSubnets" />
                     </td>
                 </tr>
                 <tr>
@@ -99,44 +87,15 @@
 @code {
     private string IPAddress;
     private string SubnetMask;
-    private string MajorNetwork;
+    private string NumberOfHosts;
     private string _ipAddress;
     private string _subnetMask;
-    private string _majorNetwork;
-    private int _numSubnets = 3;
-
-    public int NumSubnets
-    {
-        get => _numSubnets;
-        set
-        {
-            if (value >= 0)
-            {
-                _numSubnets = value;
-                SubnetTitle = 2 + _numSubnets;
-                Subnets = Enumerable.Range(0, _numSubnets).Select(_ => new Subnet()).ToList();
-            }
-        }
-    }
-
-    private int SubnetTitle = 5;
+    private int NumSubnets;
     private List<Subnet> Subnets;
 
     protected override void OnInitialized()
     {
-        Subnets = Enumerable.Range(0, _numSubnets).Select(_ => new Subnet()).ToList();
-    }
 
-    private void ChangeNumbers()
-    {
-        SubnetTitle = NumSubnets + 2;
-
-        Subnets = new List<Subnet>();
-
-        for (int i = 0; i < NumSubnets; i++)
-        {
-            Subnets.Add(new Subnet());
-        }
     }
 
     private void CalculateSubnets()
@@ -152,11 +111,9 @@
             return;
         }
 
-
-
+        var numberOfHost = NumberOfHosts;
         var ipAddress = IPAddress;
         var subnetMask = SubnetMask;
-        var network = MajorNetwork;
         var numsubnets = NumSubnets;
     }
 
@@ -220,5 +177,14 @@
         }
 
         return true;
+    }
+
+    public class Subnet
+    {
+        public string Name { get; set; }
+        public string Size { get; set; }
+        public string SubnetMask { get; set; }
+        public string AddressRange { get; set; }
+        public string BroadcastAddress { get; set; }
     }
 }

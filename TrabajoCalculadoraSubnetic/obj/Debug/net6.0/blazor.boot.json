@@ -196,13 +196,13 @@
       "mscorlib.dll": "sha256-y7DhCb2PceYWjnHWsZokJrty551Q9XISH3Z72o6RdwI=",
       "netstandard.dll": "sha256-REs1\/xYvAzuX2k2Y5p\/5IaM3O\/zaiYSW62pOQBGMrrA=",
       "System.Private.CoreLib.dll": "sha256-Bz7VnNtt03SzAvIN30yx1e25P6SfMdLYIaKIy7ASEnw=",
-      "TrabajoCalculadoraSubnetic.dll": "sha256-jH6yiu6XCCUeYWwopD7ow\/7JdoXYf2LHlYTjww4NGS8="
+      "TrabajoCalculadoraSubnetic.dll": "sha256-QD0+LLLqhDmonEXizRSmwGZYwEZqQWJXrNAAHURGa4Y="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "TrabajoCalculadoraSubnetic.pdb": "sha256-iLaK+JYY6Y7tL3U2jJDdOiGPcDCPT9eF7TjhMsssR8I="
+      "TrabajoCalculadoraSubnetic.pdb": "sha256-s55B2dVTsD0Fn\/2b8Y01j7Ow2BLgNA4XK7YRUobGSWA="
     },
     "runtime": {
       "dotnet.6.0.15.afes86u6pa.js": "sha256-fb2wBZaRp096nChMG9nDNEcW0kW1whA\/kfQNyH+5QpQ=",
