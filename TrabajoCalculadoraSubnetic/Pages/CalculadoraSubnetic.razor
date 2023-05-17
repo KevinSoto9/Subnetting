@@ -1,188 +1,210 @@
 ﻿@page "/"
-@using System;
-@using System.Linq;
-@using System.Globalization;
+@using System.Net
+@using System.Net.Sockets
 @using System.Text.RegularExpressions;
-@using System.Net;
 
-<html>
-  <head>
-    <link rel="stylesheet" href="~/css/app.css">
-    <title>Calculadora Subnetting (FLSM)</title>
-  </head>
-  <body>
-    <h3>Calculadora Subnetting (FLSM)</h3>
-        <table>
-            <tbody>
-                <tr>
-                    <td><label for="ipAddress">IP Address:</label></td>
-                    <td colspan="2">
-                        <input id="ipAddress" style="width: 405px" type="text" @bind-value="@IPAddress" />
-                    @if (!string.IsNullOrEmpty(IPAddress) && !IsValidIpAddress(IPAddress))
-                    {
-                        <p class="error">Invalid IP Address format</p>
-                    }
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="subnetMask">Subnet Mask (CIDR)</label></td>
-                    <td colspan="2">
-                        <input id="subnetMask" style="width: 405px"  type="text" @bind-value="@SubnetMask" />
-                    @if (!string.IsNullOrEmpty(SubnetMask) && !IsValidSubnetMask(SubnetMask))
-                    {
-                        <p class="error">Invalid Subnet Mask (CIDR) format</p>
-                    }
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="numberOfHosts">Numbers of Hosts</label></td>
-                    <td colspan="2">
-                        <input id="numberOfHosts" style="width: 405px"  type="text" @bind-value="@NumberOfHosts" />
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="numSubnets">Numbers of Subnets</label></td>
-                    <td colspan="2">
-                        <input id="numSubnets" style="width: 405px"  type="text" @bind-value="@NumSubnets" />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3"><button id="boton" type="button" @onclick="CalculateSubnets">Submit</button></td>
-                </tr>
-            </tbody>
-        </table>
+<h3>Calculadora de Subnetting</h3>
 
-        @*@if (Subnets != null)
+<table>
+    <tr>
+        <td colspan="2">
+            <p>Dirección IP:</p>
+            <input style="width: 450px;" @bind="ipAddress" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>Máscara de Red:</p>
+            <input style="width: 450px;" @bind="subnetMask" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>Número de Hosts por Subred:</p>
+            <input style="width: 450px;" @bind="hostsPerSubnet" type="number" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>Número de Subredes:</p>
+            <input style="width: 450px;" @bind="numSubnets" type="number" min="1" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button @onclick="CalcularSubnets">Calcular</button>
+        </td>
+    </tr>
+    @if (subnets != null && subnets.Count > 0)
+    {
+        <tr>
+            <th colspan="2">Información de Subredes</th>
+        </tr>
+        @foreach (var subnet in subnets)
         {
-            <div>
-                <h4>Result:</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Size</th>
-                            <th>Subnet Mask</th>
-                            <th>Address Range</th>
-                            <th>Broadcast Address</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var subnet in Subnets)
-                        {
-                            <tr>
-                                <td>@subnet.Name</td>
-                                <td>@subnet.Size</td>
-                                <td>@subnet.SubnetMask</td>
-                                <td>@subnet.AddressRange</td>
-                                <td>@subnet.BroadcastAddress</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }*@
-  </body>
-</html>
+            <tr>
+                <td colspan="2">
+                    <ul>
+                        <li>Dirección IP: @subnet.DireccionRed.ToString()</li>
+                        <li>Máscara de Red: @subnet.MascaraRed.ToString()</li>
+                        <li>Direcciones asignables: @subnet.DireccionInicio.ToString() - @subnet.DireccionFin.ToString()</li>
+                        <li>Dirección de broadcast: @subnet.DireccionBroadcast.ToString()</li>
+                        <li>Hosts pedidos: @subnet.HostsPorSubred</li>
+                        <li>Hosts disponibles: @subnet.HostsDisponibles</li>
+                    </ul>
+                </td>
+                <td colspan="2">
+                    <p style="color: red;">@errorMessage</p>
+                </td>
+            </tr>
+        }
+    }
+</table>
 
 @code {
-    private string IPAddress;
-    private string SubnetMask;
-    private string NumberOfHosts;
-    private string NumSubnets;
-    private List<Subnet> Subnets;
+    private string ipAddress;
+    private int subnetMask;
+    private int hostsPerSubnet;
+    private int numSubnets;
+    private List<Subred> subnets;
+    private string errorMessage;
 
-    protected override void OnInitialized()
+    private class Subred
     {
+        public int Indice { get; set; }
+        public IPAddress DireccionRed { get; set; }
+        public IPAddress MascaraRed { get; set; }
+        public IPAddress DireccionBroadcast { get; set; }
+        public IPAddress DireccionInicio { get; set; }
+        public IPAddress DireccionFin { get; set; }
+        public int HostsPorSubred { get; set; }
+        public int HostsDisponibles { get; set; }
 
     }
 
-    private void CalculateSubnets()
+    private void CalcularSubnets()
     {
-        if (!IsValidIpAddress(IPAddress))
+        subnets = new List<Subred>();
+
+        errorMessage = string.Empty;
+
+
+        if (!IPAddress.TryParse(ipAddress, out IPAddress ip) || !EsMascaraRedValida(subnetMask) || !EsIpValida(ipAddress) || hostsPerSubnet <= 0 || numSubnets <= 0)
         {
+            errorMessage = "El formato de entrada es incorrecto.";
             return;
         }
 
-        if (!IsValidSubnetMask(SubnetMask))
-        {
+        int subredesTotales = numSubnets;
+        int bitsMascaraRed = CalcularBitsMascaraRed(subredesTotales);
 
+        if (bitsMascaraRed > 32 - subnetMask)
+        {
+            errorMessage = "La mascara esta mal";
             return;
         }
 
-        var numberOfHost = NumberOfHosts;
-        var ipAddress = IPAddress;
-        var subnetMask = SubnetMask;
-        var numsubnets = NumSubnets;
+        var direccionRed = CalcularDireccionRed(ip, subnetMask);
+        var bytesMascaraRed = ObtenerBytesMascaraRed(subnetMask + bitsMascaraRed);
+
+        for (int i = 0; i < numSubnets; i++)
+        {
+            var subred = new Subred();
+            subred.Indice = i + 1;
+            subred.DireccionRed = direccionRed;
+            subred.MascaraRed = new IPAddress(bytesMascaraRed);
+            subred.DireccionBroadcast = CalcularDireccionBroadcast(direccionRed, bytesMascaraRed);
+            subred.DireccionInicio = IncrementarDireccionIP(direccionRed, 1);
+            subred.DireccionFin = DecrementarDireccionIP(subred.DireccionBroadcast, 1);
+            subred.HostsPorSubred = hostsPerSubnet;
+            subred.HostsDisponibles = CalcularHostsDisponibles(subnetMask + bitsMascaraRed) - subredesTotales;
+
+            subnets.Add(subred);
+
+            direccionRed = IncrementarDireccionIP(subred.DireccionBroadcast, 1);
+        }
     }
 
-    private bool IsValidIpAddress(string ipAddress)
+    private bool EsMascaraRedValida(int subnetMask)
     {
-        string pattern = @"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$";
-        if (!Regex.IsMatch(ipAddress, pattern))
-        {
-            return false; 
-        }
-
-        string[] octets = ipAddress.Split('.');
-        foreach (string octet in octets)
-        {
-            int value = int.Parse(octet);
-            if (value < 0 || value > 255)
-            {
-                return false; 
-            }
-        }
-
-        return true;
+        string subnetMaskString = subnetMask.ToString();
+        return Regex.IsMatch(subnetMaskString, @"^([0-9]{1,2})$");
     }
 
-    private bool IsValidSubnetMask(string subnetMask)
+    private bool EsIpValida(string ipaddress)
     {
-        string pattern = @"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$";
-        if (!Regex.IsMatch(subnetMask, pattern))
-        {
-            return false; 
-        }
+        return Regex.IsMatch(ipaddress, @"^(?:\d{1,3}\.){3}\d{1,3}$");
+    }
 
-        string[] octets = subnetMask.Split('.');
-        int[] values = new int[4];
+    private int CalcularBitsMascaraRed(int subredesTotales)
+    {
+        return (int)Math.Ceiling(Math.Log(subredesTotales, 2));
+    }
+
+    private IPAddress CalcularDireccionRed(IPAddress ip, int subnetMask)
+    {
+        byte[] bytesIP = ip.GetAddressBytes();
+        byte[] bytesMascaraRed = ObtenerBytesMascaraRed(subnetMask);
+        byte[] bytesDireccionRed = new byte[4];
+
         for (int i = 0; i < 4; i++)
         {
-            values[i] = int.Parse(octets[i]);
+            bytesDireccionRed[i] = (byte)(bytesIP[i] & bytesMascaraRed[i]);
         }
 
-        int firstZero = -1;
-        for (int i = 0; i < 4; i++)
-        {
-            if (values[i] == 0)
-            {
-                firstZero = i;
-                break;
-            }
-        }
-
-        if (firstZero == -1)
-        {
-            return false; 
-        }
-
-        for (int i = firstZero + 1; i < 4; i++)
-        {
-            if (values[i] != 0)
-            {
-                return false; 
-            }
-        }
-
-        return true;
+        return new IPAddress(bytesDireccionRed);
     }
 
-    public class Subnet
+    private byte[] ObtenerBytesMascaraRed(int subnetMask)
     {
-        public string Name { get; set; }
-        public string Size { get; set; }
-        public string SubnetMask { get; set; }
-        public string AddressRange { get; set; }
-        public string BroadcastAddress { get; set; }
+        int bytesCompletos = subnetMask / 8;
+        int bytesParcial = subnetMask % 8;
+
+        byte[] bytesMascaraRed = new byte[4];
+
+        for (int i = 0; i < bytesCompletos; i++)
+        {
+            bytesMascaraRed[i] = 255;
+        }
+
+        if (bytesParcial > 0)
+        {
+            bytesMascaraRed[bytesCompletos] = (byte)(255 << (8 - bytesParcial));
+        }
+
+        return bytesMascaraRed;
+    }
+
+    private IPAddress CalcularDireccionBroadcast(IPAddress direccionRed, byte[] bytesMascaraRed)
+    {
+        byte[] bytesDireccionBroadcast = new byte[4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            bytesDireccionBroadcast[i] = (byte)(direccionRed.GetAddressBytes()[i] | ~bytesMascaraRed[i]);
+        }
+
+        return new IPAddress(bytesDireccionBroadcast);
+    }
+
+    private IPAddress IncrementarDireccionIP(IPAddress ip, int incremento)
+    {
+        int valorIP = BitConverter.ToInt32(ip.GetAddressBytes().Reverse().ToArray(), 0);
+        valorIP += incremento;
+
+        return new IPAddress(BitConverter.GetBytes(valorIP).Reverse().ToArray());
+    }
+
+    private IPAddress DecrementarDireccionIP(IPAddress ip, int decremento)
+    {
+        int valorIP = BitConverter.ToInt32(ip.GetAddressBytes().Reverse().ToArray(), 0);
+        valorIP -= decremento;
+
+        return new IPAddress(BitConverter.GetBytes(valorIP).Reverse().ToArray());
+    }
+
+    private int CalcularHostsDisponibles(int subnetMask)
+    {
+        return (int)Math.Pow(2, 32 - subnetMask);
     }
 }
